@@ -1,26 +1,26 @@
 export type Genre =
-  | 'slice-of-life'
-  | 'coming-of-age'
-  | 'horror'
-  | 'fantasy'
-  | 'sci-fi'
-  | 'romance'
-  | 'noir'
-  | 'literary'
-  | 'historical'
-  | 'character';
+  | 'Slice of Life'
+  | 'Coming of Age'
+  | 'Horror'
+  | 'Fantasy'
+  | 'Sci-Fi'
+  | 'Romance'
+  | 'Crime / Noir'
+  | 'Literary / Experimental'
+  | 'Historical Fiction'
+  | 'Character Studies';
 
 export const GENRE_LABELS: Record<Genre, string> = {
-  'slice-of-life': 'Slice of Life',
-  'coming-of-age': 'Coming of Age',
-  horror: 'Horror',
-  fantasy: 'Fantasy',
-  'sci-fi': 'Sci-Fi',
-  romance: 'Romance',
-  noir: 'Crime / Noir',
-  literary: 'Literary',
-  historical: 'Historical',
-  character: 'Character Study',
+  'Slice of Life': 'Slice of Life',
+  'Coming of Age': 'Coming of Age',
+  'Horror': 'Horror',
+  'Fantasy': 'Fantasy',
+  'Sci-Fi': 'Sci-Fi',
+  'Romance': 'Romance',
+  'Crime / Noir': 'Crime / Noir',
+  'Literary / Experimental': 'Literary / Experimental',
+  'Historical Fiction': 'Historical Fiction',
+  'Character Studies': 'Character Studies',
 };
 
 export interface Prompt {
