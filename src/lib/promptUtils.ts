@@ -30,9 +30,11 @@ export function getDailyPrompt(date: Date = new Date()): Prompt {
   return genrePrompts[seed % genrePrompts.length];
 }
 
-export function getPromptForGenre(genre: Genre): Prompt {
+export function getPromptForGenre(genre: Genre, excludeIds: string[] = []): Prompt {
   const genrePrompts = prompts.filter((p) => p.genre === genre);
-  return genrePrompts[Math.floor(Math.random() * genrePrompts.length)];
+  const eligible = genrePrompts.filter((p) => !excludeIds.includes(p.id));
+  const pool = eligible.length > 0 ? eligible : genrePrompts;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 export function getRandomPrompt(): Prompt {

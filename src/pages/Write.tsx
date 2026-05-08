@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { type Genre, type Prompt } from '../types';
 import { getDailyPrompt, getPromptForGenre } from '../lib/promptUtils';
+import { prompts } from '../lib/prompts';
 import { GenreFilter } from '../components/writing/GenreFilter';
 import { PromptCard } from '../components/writing/PromptCard';
 import { WritingArea } from '../components/writing/WritingArea';
@@ -14,6 +15,7 @@ import { useFocusMode } from '../hooks/useFocusMode';
 export function Write() {
   const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
   const [currentPrompt, setCurrentPrompt] = useState<Prompt>(() => getDailyPrompt());
+  const seenIdsRef = useRef<string[]>([]);
 
   const { body, setBody, wordCount, canSave, isSaving, sessionStats, clearStats, saveSession } =
     useWritingSession();
@@ -21,20 +23,30 @@ export function Write() {
   const { isFocused, toggleFocusMode, exitFocusMode } = useFocusMode();
 
   const handleGenreChange = useCallback((genre: Genre | null) => {
+    seenIdsRef.current = [];
     setSelectedGenre(genre);
     if (genre === null) {
       setCurrentPrompt(getDailyPrompt());
     } else {
-      setCurrentPrompt(getPromptForGenre(genre));
+      const prompt = getPromptForGenre(genre);
+      seenIdsRef.current = [prompt.id];
+      setCurrentPrompt(prompt);
     }
   }, []);
 
   const handleDifferentPrompt = useCallback(() => {
     if (selectedGenre === null) {
       setCurrentPrompt(getDailyPrompt());
-    } else {
-      setCurrentPrompt(getPromptForGenre(selectedGenre));
+      return;
     }
+    const next = getPromptForGenre(selectedGenre, seenIdsRef.current);
+    const genreSize = prompts.filter((p) => p.genre === selectedGenre).length;
+    if (seenIdsRef.current.length >= genreSize - 1) {
+      seenIdsRef.current = [next.id]; // full cycle complete, reset
+    } else {
+      seenIdsRef.current = [...seenIdsRef.current, next.id];
+    }
+    setCurrentPrompt(next);
   }, [selectedGenre]);
 
   const handleSave = useCallback(async () => {
