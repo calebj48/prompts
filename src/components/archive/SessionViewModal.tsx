@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { type WritingSession, GENRE_LABELS } from '../../types';
 import { Modal } from '../ui/Modal';
 import { formatDuration } from '../../lib/streakUtils';
@@ -17,6 +18,13 @@ function formatDate(iso: string): string {
 }
 
 export function SessionViewModal({ session, onClose }: SessionViewModalProps) {
+  const navigate = useNavigate();
+
+  const handleWriteVariation = () => {
+    onClose();
+    navigate('/write', { state: { promptId: session.prompt_id } });
+  };
+
   return (
     <Modal isOpen onClose={onClose} overlayClassName="session-view-overlay">
       <div className="session-view-panel">
@@ -48,6 +56,12 @@ export function SessionViewModal({ session, onClose }: SessionViewModalProps) {
         </div>
 
         <div className="session-view-body">{session.body}</div>
+
+        <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-surface)' }}>
+          <button className="btn-ghost" onClick={handleWriteVariation} style={{ fontSize: '0.875rem' }}>
+            Write another variation on this prompt
+          </button>
+        </div>
       </div>
     </Modal>
   );
